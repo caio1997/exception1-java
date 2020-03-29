@@ -5,14 +5,15 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Reservation {
+
     private int roomNumber;
     private Date checkin;
     private Date checkout;
     private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    
-    public Reservation(){ 
+
+    public Reservation() {
     }
-    
+
     public Reservation(int roomNumber, Date checkin, Date chackout) {
         this.roomNumber = roomNumber;
         this.checkin = checkin;
@@ -35,29 +36,36 @@ public class Reservation {
         return checkout;
     }
 
-    public long duration(){
+    public long duration() {
         long diff = checkout.getTime() - checkin.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-   }
-    
-    public void UpdateDates(Date checkin, Date checkout){
+    }
+
+    public String UpdateDates(Date checkin, Date checkout) {
+        Date now = new Date();
+        if (checkin.before(now) || (checkout.before(now))) {
+            return "Reservation dates for update must be future dates";
+        }
+        if (!checkout.after(checkin)) {
+            return "Check-out date must be after check-in date";
+        }
+
         this.checkin = checkin;
         this.checkout = checkout;
+        return null;
     }
 
     @Override
     public String toString() {
-        return  "RoomNumber = " +
-                roomNumber + 
-                " - checkin = " + 
-                sdf.format(checkin) +
-                " - checkout = " +
-                sdf.format(checkout) +
-                " - "+
-                duration() +
-                " nights";
+        return "RoomNumber = "
+                + roomNumber
+                + " - checkin = "
+                + sdf.format(checkin)
+                + " - checkout = "
+                + sdf.format(checkout)
+                + " - "
+                + duration()
+                + " nights";
     }
-    
-    
-   
+
 }
